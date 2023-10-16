@@ -1,44 +1,27 @@
 # bybit-tools
 
-Bybit-tools is not maintained anymore and is now included as  [Bybit Pro](https://marketspy.net/bybit-pro-tool/) in the MarketSpy Trading Suite
+Edited version of Bybit TOols, was a work in progress untill Bybit cancelled UK users. Might port to another exchange. Leaving this here should anyone find it usefull.
 
-Desktop app to place scaled orders on bybit
+Features,
 
-![Preview](./screenshots/main_screen.png)
+Martingale Bots which automatically restart after scanning the markets for oppertunities,
+Calulations page,
+Market Screener,
+Hot Keys and button layouts based on external keyboard for quick interaction with the exchange. canel orders, place order excetra,
+OrderBook
+Scale in
+Scale out
 
-##### Features :
+![Screenshot 2023-10-16 210410](https://github.com/thes3cr3t1/bybit-tools/assets/49348412/0cf79f59-4ef4-4488-9105-e0b2a069f87e)
+![Screenshot 2023-10-16 210057](https://github.com/thes3cr3t1/bybit-tools/assets/49348412/0506e76a-cc80-4fc7-82d4-b60436651024)
+![Screenshot 2023-10-16 205343](https://github.com/thes3cr3t1/bybit-tools/assets/49348412/6086daa0-0020-4b6c-b519-47219772d161)
+![Screenshot 2023-10-16 205304](https://github.com/thes3cr3t1/bybit-tools/assets/49348412/da6e12f6-8b52-4216-a7a0-7a6a22ae71ae)
+![Screenshot 2023-10-16 205211](https://github.com/thes3cr3t1/bybit-tools/assets/49348412/1a94ecf4-a979-4fa2-a1bf-08a467bb9522)
 
- - Including a webview to *your* tradingview chart, allowing you to use custom indicators
- - Generate scaled orders
- - Place laddered/limit/market orders
- - Preview stop loss cost / target profit gains
- - Bulk cancel orders
- - Show current open position
- - Risk management calculator
-
-[Releases](https://github.com/TranceGeniK/bybit-tools/releases)
-
-[Overview and quick how-to by Crypto Ranger](https://www.youtube.com/watch?v=it4fIeX-Gc0)
-
-[Guide en français par Archer](https://www.youtube.com/watch?v=Bl6Q7FZ6iAk&feature=youtu.be)
-
-
-Bybit API key parameters : 
-
-<img src="screenshots/bybit_key_parameters.png" width="300">
-
-##### Troubleshooting :
-If you're getting `invalid request, please check your timestamp and recv_window param` error, [resync your system clock](https://www.google.com/search?q=sync+system+clock&oq=sync+system+clock)
 
 ##### Build instructions :
 ```
 npm install
 npm run electron:build
 ```
-
-##### If you like this app and it's useful to you, please consider supporting my work
-
-BTC Tip line : 1NkgAB4JmbTp7NFkWPVnpZiWJkgoxUkpks
-
-ETH Tip line : 0xedde349177388e3d979223ab6f0d9848ba4b08d8
 
