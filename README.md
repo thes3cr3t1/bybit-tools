@@ -1,20 +1,24 @@
 # bybit-tools
 
-Edited version of Bybit TOols, was a work in progress untill Bybit cancelled UK users. Might port to another exchange. Leaving this here should anyone find it usefull.
+# bybit-tools
 
-Features,
+Edited version of By bit Tools, was a work in progress until By bit cancelled UK users. Might port to another exchange. Leaving this here should anyone find it useful. There is lots of added functionality that isn't immediately noticeable without inspecting the code. was in the process of updating to By bit V5 API when the project became untenable due to by bit closing the door to UK users.
 
-Martingale Bots which automatically restart after scanning the markets for oppertunities,
+Features:
+
+Bot Manager class to manage multiple Martingale Bot instances across different coin pairings. Bots Automatically restart based on market conditions such as RSI.
+
+Bot Manager class can easily be updated to handle different types of bots such as DCA and other strategies.
 
 Open Position Monitor with dynamic risk reward parameters, loss if stopped, gain if TP hits, liquidation price alert if stop loss is not set or is set beyond the liquidation price.
 
 Open Orders monitor with gains loss if orders are filled, auto updates as orders are filled.
 
-Calulations page for setting targets and visualisation,
+Calculations page for setting targets and visualization,
 
 Market Screener,
 
-Hot Keys and button layouts based on external keyboard for quick interaction with the exchange. cancel orders, place order excetra,
+Hot Keys and button layouts based on external keyboard for quick interaction with the exchange. Cancel orders, place order excreta,
 
 OrderBook,
 
