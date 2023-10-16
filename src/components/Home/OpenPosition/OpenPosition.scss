@@ -1,3 +1,42 @@
 .open-position {
 
+
 }
+
+.liqColor{
+    color: #78b63f;
+    font-weight: bold;
+}
+
+.qty{
+    font-weight: bold;
+}
+
+.risk{
+    font-weight: bold;
+    color: #e44b8f;
+}
+
+.gain{
+    font-weight: bold;
+    color: #0ba7da;
+}
+
+.flashing {
+    animation: flashing-text 0.5s infinite;
+    color: #f03838;
+    font-weight: bold;
+  }
+  
+  @keyframes flashing-text {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+

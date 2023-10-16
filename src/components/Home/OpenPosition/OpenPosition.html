@@ -1,39 +1,97 @@
 <section class="open-position" xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
-  <v-data-table
+  <v-data-table 
       :headers="headers"
       :items="[$bybitApi.openPosition]"
       dense
       hide-default-footer
   >
     <template v-slot:item.size="{ item }">
-      <span v-if="item.side === 'Sell'" class="error--text">-{{item.size}}</span>
-      <span v-if="item.side === 'Buy'" class="success--text">{{item.size}}</span>
+      <span v-if="item.side === 'Sell'" class="error--text qty">-{{item.size}}</span>
+      <span v-if="item.side === 'Buy'" class="success--text qty">{{item.size}}</span>
     </template>
-    
-    <template v-slot:item.unrealised_pnl_last="{ item }">
-      <span v-if="unrealised_pnl_last(item.entry_price, item.size, item.side) < 0" class="error--text">{{unrealised_pnl_last(item.entry_price, item.size, item.side).toFixed(6)}} | ≈${{(unrealised_pnl_last(item.entry_price, item.size, item.side) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * unrealised_pnl_last(item.entry_price, item.size, item.side) / item.position_margin).toFixed(2)}}%)</span>
-      <span v-else-if="unrealised_pnl_last(item.entry_price, item.size, item.side) > 0" class="success--text">{{unrealised_pnl_last(item.entry_price, item.size, item.side).toFixed(6)}} | ≈${{(unrealised_pnl_last(item.entry_price, item.size, item.side) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * unrealised_pnl_last(item.entry_price, item.size, item.side) / item.position_margin).toFixed(2)}}%)</span>
-      <span v-else>{{unrealised_pnl_last(item.entry_price, item.size, item.side).toFixed(6)}} | ≈${{(unrealised_pnl_last(item.entry_price, item.size, item.side) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * unrealised_pnl_last(item.entry_price, item.size, item.side) / item.position_margin).toFixed(2)}}%)</span>
+
+    <template v-slot:item.liqPrice="{ item }">
+      <span v-if="item.liqPrice" class ="liqColor" :class="{ 'flashing': shouldFlashLiqPrice(item)}">{{item.liqPrice}}</span>
     </template>
+<!-- 
+    will need to add the btc calulation for p&L -->
     
-    <template v-slot:item.realised_pnl="{ item }">
+    <template v-slot:item.unrealisedPnl="{ item }">
+      <span v-if="unrealised_pnl_last(item.avgPrice, item.size, item.side) < 0" class="error--text">{{unrealised_pnl_last(item.avgPrice, item.size, item.side).toFixed(6)}} ({{(100 * unrealised_pnl_last(item.avgPrice, item.size, item.side) / item.positionBalance).toFixed(2)}}%)
+      </span>
+      
+      <span v-else-if="unrealised_pnl_last(item.avgPrice, item.size, item.side) > 0" class="success--text">
+        {{unrealised_pnl_last(item.avgPrice, item.size, item.side).toFixed(6)}} ({{(100 * unrealised_pnl_last(item.avgPrice, item.size, item.side) / item.positionBalance).toFixed(2)}}%)
+      </span>
+      
+     <span v-else>{{unrealised_pnl_last(item.avgPrice, item.size, item.side).toFixed(6)}} ({{(100 * unrealised_pnl_last(item.avgPrice, item.size, item.side) / item.positionBalance).toFixed(2)}}%)
+     </span>
+    </template>
+
+   <!-- <template v-slot:item.unrealisedPnl="{ item }">
+      <span v-if="unrealised_pnl_last(item.avgPrice, item.size, item.side) < 0" class="error--text">{{unrealised_pnl_last(item.avgPrice, item.size, item.side).toFixed(6)}} | ≈${{(unrealised_pnl_last(item.avgPrice, item.size, item.side) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * unrealised_pnl_last(item.avgPrice, item.size, item.side) / item.positionBalance).toFixed(2)}}%)
+      </span>
+      
+      <span v-else-if="unrealised_pnl_last(item.avgPrice, item.size, item.side) > 0" class="success--text">
+        {{unrealised_pnl_last(item.avgPrice, item.size, item.side).toFixed(6)}} | ≈${{(unrealised_pnl_last(item.avgPrice, item.size, item.side) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * unrealised_pnl_last(item.avgPrice, item.size, item.side) / item.positionBalance).toFixed(2)}}%)
+      </span>
+      
+     <span v-else>{{unrealised_pnl_last(item.avgPrice, item.size, item.side).toFixed(6)}} | ≈${{(unrealised_pnl_last(item.avgPrice, item.size, item.side) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * unrealised_pnl_last(item.avgPrice, item.size, item.side) / item.positionBalance).toFixed(2)}}%)
+     </span>
+    </template> -->
+
+     <!-- <template v-slot:item.realised_pnl="{ item }">
       <span v-if="item.realised_pnl < 0" class="error--text">{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span>
       <span v-else-if="item.realised_pnl > 0" class="success--text">{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span>
-      <span v-else>{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span>
-    </template>
+      <span v-else>{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span> 
+    </template> 
+    -->
     
-    <template v-slot:item.daily_total="{ item }">
+    <!-- <template v-slot:item.daily_total="{ item }">
       <span v-if="dailyTotal(item) < 0" class="error--text">{{dailyTotal(item).toFixed(6)}} | ≈${{(dailyTotal(item).toFixed(6) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * dailyTotal(item) / $bybitApi.walletBalance).toFixed(2)}}%)</span>
       <span v-else-if="dailyTotal(item) > 0" class="success--text">{{dailyTotal(item).toFixed(6)}} | ≈${{(dailyTotal(item).toFixed(6) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * dailyTotal(item) / $bybitApi.walletBalance).toFixed(2)}}%)</span>
       <span v-else>{{dailyTotal(item).toFixed(6)}} | ≈${{(dailyTotal(item).toFixed(6) * $bybitApi.lastPrice).toFixed(2)}} ({{(100 * dailyTotal(item) / $bybitApi.walletBalance).toFixed(2)}}%)</span>
+    </template> -->
+
+    <template v-slot:item.breakEven="{ item }">
+      <span>{{breakEven}}</span>
+    </template>
+
+    <template v-slot:item.risk_reward="{ item }">
+       <span v-if="$bybitApi.lastPrice < item.avgPrice"> {{"1 : " + risk_reward(item)}} </span>
+       <span v-if="$bybitApi.lastPrice > item.avgPrice"> {{risk_reward(item) + " : 1"}} </span>
+    </template>
+
+    <template v-slot:item.static_risk_reward="{ item }">
+      <span v-if="$bybitApi.lastPrice < item.avgPrice"> {{"1 : " + static_risk_reward(item)}} </span>
+      <span v-if="$bybitApi.lastPrice > item.avgPrice"> {{static_risk_reward(item) + " : 1"}} </span>
+   </template>
+    
+    <template v-slot:item.avgPrice="{ item }">
+      {{parseFloat(item.avgPrice).toFixed(1)}}
+    </template>
+
+
+    <template v-slot:item.dollar_risk="{ item }">
+      <span class="risk">-${{dollar_risk(item)}}</span>
     </template>
     
-    <template v-slot:item.entry_price="{ item }">
-      {{item.entry_price.toFixed(2)}}
+    
+    <template v-slot:item.risk_percent="{ item }">
+      <span>-{{risk_percent(item)}}%</span>
+    </template>
+
+    <template v-slot:item.dollar_gain="{ item }">
+      <span class="gain">{{!isFinite(dollar_gain(item)) || isNaN(dollar_gain(item)) || dollar_gain(item) < 0 ? 'Set TP' : (isFinite(dollar_gain(item)) ? '+' : 'Set TP')}}{{isFinite(dollar_gain(item)) ? dollar_gain(item) : ''}}</span>
     </template>
     
-    <template v-slot:item.position_margin="{ item }">
-      {{item.position_margin.toFixed(5)}} | ≈${{(item.position_margin * $bybitApi.lastPrice).toFixed(2)}}
+    <template v-slot:item.gain_percent="{ item }">
+      <span class="gain">{{!isFinite(gain_percent(item)) || isNaN(gain_percent(item)) || gain_percent(item) < 0 ? 'Set TP' : (isFinite(gain_percent(item)) ? '+' : 'Set TP')}}{{isFinite(gain_percent(item)) ? gain_percent(item) : ''}}% </span>
+    </template>
+     
+    
+    <template v-slot:item.positionBalance="{ item }">
+      {{item.positionBalance.toFixed(5)}} | ≈${{(item.positionBalance * $bybitApi.lastPrice).toFixed(2)}}
     </template>
     
     <template v-slot:item.position_value="{ item }">

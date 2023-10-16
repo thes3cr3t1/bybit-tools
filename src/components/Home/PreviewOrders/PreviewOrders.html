@@ -1,0 +1,20 @@
+<section class="preview-orders">
+  <v-layout align-center justify-space-between row ml-2 mr-2 mb-2>
+    <span class="font-weight-light">Preview Orders</span>
+    <a @click="$emit('close')">Close</a>
+  </v-layout>
+  
+  <v-data-table
+      :headers="headers"
+      :items="orders"
+      :items-per-page="10"
+      dense
+  >
+    <template v-slot:item.reduce_only="{ item }">
+      {{item.reduce_only ? 'Yes' : 'No'}}
+    </template>
+  </v-data-table>
+ Contracts :  {{contracts}} Average Entry : {{average}}  Required Leverage : {{leverage}}
+  <template v-show="slLoss"><br>Stop loss : {{slLoss}}</template>
+  <template v-show="tpProfit"><br>Target profit : {{tpProfit}} Balance Increase : {{percentIncrease}}</template>
+</section>

@@ -1,0 +1,76 @@
+<v-layout column align-center>
+
+  <template v-if="!renderMenu">
+    <v-progress-circular indeterminate size="64"></v-progress-circular>
+  </template>
+
+
+    <table>
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Week</th>
+          <th>Month</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td :style="{ backgroundColor: day === 'green' ? 'green' : 'red' }"> day</td>
+          <td :style="{ backgroundColor: week === 'green' ? 'green' : 'red' }"> week</td>
+          <td :style="{ backgroundColor: month === 'green' ? 'green' : 'red' }"> month</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <!-- <v-text-field v-model="search" label="Search Contract" @input="updateFilteredItems"></v-text-field> -->
+
+    <v-text-field v-model="search" label="Search Contract"></v-text-field>
+
+                      <v-data-table
+                        v-if="renderMenu"
+                        :headers="headers"
+                        :items="filteredItems"
+                        :hide-default-footer="true"
+                        disable-pagination
+                        class="my-table elevation-1"
+                      >
+                  
+                        <template v-slot:item="{ item }">
+                            <tr v-on:click="changeSymbol(item.symbol)">
+                                <td style="display: flex; align-items: center;"> 
+                                  <img v-bind:src="coinImageMap.get(item.symbol).iconUrl" style="width: 80%; height: 80%"> 
+                                </td>
+
+                                <td>{{ item.symbol }} 
+                                  <v-img v-if="symbolTagImage(item,'HOT')" :src="symbolTagImage(item,'HOT')" class="image-class" style="width: 15%; height: 30%;"></v-img>
+                                  <v-img v-if="symbolTagImage(item,'Trending')" :src="symbolTagImage(item,'Trending')" class="image-class" style="width: 15%; height: 30%;"></v-img>
+                                  <v-img v-if="symbolTagImage(item,'NEW')" :src="symbolTagImage(item,'NEW')" class="image-class" style="width: 15%; height: 30%;"></v-img>
+                                </td>
+
+                                <td>{{ item.last_price }}</td>
+
+                                <td>{{ Bias[item.symbol] }}</td>
+
+                                 <td :class="{ positive: item.price_24h_pcnt >= 0, negative: item.price_24h_pcnt < 0 }">
+                                 {{ item.price_24h_pcnt < 0 ? '-' + (item.price_24h_pcnt*100).toFixed(2) + '%' : '+' + (item.price_24h_pcnt*100).toFixed(2) + '%' }}</td>
+                                <td>{{ (item.volume_24h>=1000000000 ? (item.volume_24h/1000000000).toFixed(2) + 'B' : (item.volume_24h/1000000).toFixed(2) + 'M' )}}</td>
+                              
+                                <td>{{ item.rsiValues =  getLastItemInArray(rsiValues[item.symbol]) }}</td>
+                                <td>{{ item.atrValues = atrValues[item.symbol] }}</td> 
+
+
+                                 <td>{{ item.Support = scannerSupportResistance[item.symbol].support }}</td> 
+                                 <td>{{ item.supportPercentChange = scannerSupportResistance[item.symbol].supportPercentChange }}</td> 
+                                 <td>{{ item.longRR = scannerSupportResistance[item.symbol].longRR }}</td>  
+                                 <td>{{ item.Resistance = scannerSupportResistance[item.symbol].resistance }}</td> 
+                                 <td>{{ item.resistancePercentChange = scannerSupportResistance[item.symbol].resistancePercentChange }}</td> 
+                                 <td>{{ item.shortRR = scannerSupportResistance[item.symbol].shortRR }}</td>   
+                            </tr>
+
+                           
+                                  
+                        </template>
+                     </v-data-table> 
+ 
+</v-layout>

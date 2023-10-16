@@ -3,6 +3,7 @@
   <v-toolbar-title class="text-uppercase">
     <span class="font-weight-light">Bybit Tools | </span>
   </v-toolbar-title>
+  
   <v-select
       class="mt-6 ml-2 font-weight-light"
       style="max-width: 110px;"
@@ -15,23 +16,92 @@
       return-object
       @change="$bybitApi.changeAccount"
   ></v-select>
+
   <v-spacer></v-spacer>
-  <v-btn-toggle
-      v-model="symbolIndex"
-      mandatory
-      color="primary"
-  >
-    <v-btn v-for="symbol in $bybitApi.availableSymbols" small mb-3>
-      {{symbol}}
-    </v-btn>
-  </v-btn-toggle>
+
+  <v-menu v-if="renderMenu" :close-on-content-click="false">
+    
+      <template v-slot:activator="{ on }">
+        <v-btn v-on="on">
+          <v-img v-bind:src="coinImageMap.get($bybitApi.currentSymbol).iconUrl" style="width: 20%; height: 20%;"></v-img>
+          <span>{{$bybitApi.currentSymbol}}</span>
+        </v-btn>
+      </template>
+        
+      <v-card style="max-height: 500px; overflow-y: scroll;">
+
+      <v-text-field v-model="search" label="search" class="search-bar" prepend-icon="mdi-magnify"></v-text-field>
+
+      <template>
+          <v-data-table
+            :headers="headers"
+            :items="filteredItems"
+            :hide-default-footer="true"
+            disable-pagination
+            class="my-table elevation-1"
+          >
+           
+                 <template v-slot:item="{ item }">
+                     <tr v-on:click="changeSymbol(item.symbol)">
+                        <td style="display: flex; align-items: center;"> 
+                          <img v-bind:src="coinImageMap.get(item.symbol).iconUrl" style="width: 80%; height: 80%"> 
+                        </td>
+
+                        <td>{{ item.symbol }} 
+                          <v-img v-if="symbolTagImage(item,'HOT')" :src="symbolTagImage(item,'HOT')" class="image-class" style="width: 15%; height: 30%;"></v-img>
+                          <v-img v-if="symbolTagImage(item,'Trending')" :src="symbolTagImage(item,'Trending')" class="image-class" style="width: 15%; height: 30%;"></v-img>
+                          <v-img v-if="symbolTagImage(item,'NEW')" :src="symbolTagImage(item,'NEW')" class="image-class" style="width: 15%; height: 30%;"></v-img>
+                        </td>
+
+                        <!-- <td>{{ coinImageMap.get(item.symbol).contractType }}</td>   -->
+                        <td>{{ item.last_price }}</td>
+                        <td :class="{ positive: item.price_24h_pcnt >= 0, negative: item.price_24h_pcnt < 0 }">
+                            {{ item.price_24h_pcnt < 0 ? '-' + (item.price_24h_pcnt*100).toFixed(2) + '%' : '+' + (item.price_24h_pcnt*100).toFixed(2) + '%' }}</td>
+                        <td>{{ (item.volume_24h>=1000000000 ? (item.volume_24h/1000000000).toFixed(2) + 'B' : (item.volume_24h/1000000).toFixed(2) + 'M' )}}</td>
+
+                     </tr>
+                </template>
+            </v-data-table>
+        </template>
+      </v-card>
+    </v-menu>  
+  
+
+  <!-- <span v-if="$bybitApi.symbolInfo.contractType == 'LinearPerpetual'" class="error--text"><strong> Wallet Balance :&nbsp BTC: &nbsp <span><strong>{{$bybitApi.balances['BTC'].wallet_balance}}</strong> </span> &nbsp {{$bybitApi.quoteCurrency}}:&nbsp <span>{{ $bybitApi.balances['USDT'].wallet_balance }} </span></strong> </span>
+
+
+  <span v-else-if="$bybitApi.symbolInfo.contractType == 'InversePerpetual'" class="success--text"><strong> Wallet Balance :&nbsp {{$bybitApi.baseCurrency}}: &nbsp <span><strong>{{$bybitApi.balances['BTC'].wallet_balance}}</strong> </span> &nbsp USD:&nbsp <span>{{ usdBalance }} </span> </strong> </span>
+    -->
+
+    <span v-if="$bybitApi.symbolInfo.contractType == 'LinearPerpetual'" class="error--text"><strong> Wallet Balance :&nbsp BTC: &nbsp <span><strong>{{$bybitApi.walletBalance}}</strong> </span> &nbsp {{$bybitApi.quoteCurrency}}:&nbsp <span>{{ $bybitApi.balances['USDT'].wallet_balance }} </span></strong> </span>
+
+
+    <span v-else-if="$bybitApi.symbolInfo.contractType == 'InversePerpetual'" class="success--text"><strong> Wallet Balance :&nbsp {{$bybitApi.baseCurrency}}: &nbsp <span><strong>{{$bybitApi.walletBalance}}</strong> </span> &nbsp USD:&nbsp <span>{{ usdBalance }} </span> </strong> </span>
+     
+
   <v-spacer></v-spacer>
-  <span v-if="lastPriceDecreasing" class="error--text">Last : <strong>{{$bybitApi.lastPrice}}</strong> </span>
-  <span v-else-if="lastPriceIncreasing" class="success--text">Last : <strong>{{$bybitApi.lastPrice}}</strong> </span>
-  <span v-else>Last : <strong>{{$bybitApi.lastPrice}}</strong> </span>
-  &nbsp|&nbsp
-  <span v-if="markPriceDecreasing" class="error--text">Mark : <strong>{{$bybitApi.markPrice}}</strong></span>
-  <span v-else-if="markPriceIncreasing" class="success--text">Mark : <strong>{{$bybitApi.markPrice}}</strong></span>
-  <span v-else>Mark : <strong>{{$bybitApi.markPrice}}</strong></span>
+
+  <span class="countdown-timer">
+    <v-tooltip v-if="$bybitApi.funding >= 0" top>
+      <template v-slot:activator="{ on }">
+        <span v-on="on">{{ $bybitApi.funding }}% / {{ countdownTimer }} &nbsp&nbsp</span>
+      </template>
+      <span>{{ $bybitApi.funding >= 0 ? 'Longs pay Shorts (Bullish)' : 'Shorts pay Longs (Bearish)' }}</span>
+    </v-tooltip>
+  </span>
+  
+
+  Last :&nbsp
+  <span v-if="lastPriceDecreasing" class="error--text"><strong>{{$bybitApi.lastPrice}}</strong> </span>
+  <span v-else-if="lastPriceIncreasing" class="success--text"><strong>{{$bybitApi.lastPrice}}</strong> </span>
+  <span v-else><strong>{{$bybitApi.lastPrice}}</strong> </span>
+  &nbsp|&nbsp Mark :&nbsp
+  <span v-if="markPriceDecreasing" class="error--text"> <strong>{{$bybitApi.markPrice}}</strong></span>
+  <span v-else-if="markPriceIncreasing" class="success--text"><strong>{{$bybitApi.markPrice}}</strong></span>
+  <span v-else><strong>{{$bybitApi.markPrice}}</strong></span>
+  &nbsp|&nbsp Difference :&nbsp
+  <span v-if="lastPriceMarkPriceDifferenceDecreasing" class="error--text"> <strong>{{$bybitApi.lastPriceMarkPriceDifference}}</strong></span>
+  <span v-else-if="lastPriceMarkPriceDifferenceIncreasing" class="success--text"><strong>{{$bybitApi.lastPriceMarkPriceDifference}}</strong></span>
+  <span v-else><strong>{{$bybitApi.lastPriceMarkPriceDifference}}</strong></span>
 </v-app-bar>
 

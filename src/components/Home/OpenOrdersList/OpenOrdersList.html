@@ -1,41 +1,24 @@
-<section class="open-orders-list">
-  <v-layout align-center justify-space-between row ml-2 mr-2 mb-2>
-    <span class="font-weight-light">Open Orders ( {{sum($bybitApi.openOrders.filter(order => order.side === 'Buy'), 'qty')}} Long / {{sum($bybitApi.openOrders.filter(order => order.side === 'Sell'), 'qty')}} Short )</span>
-    <div>
-      <v-btn small
-             :disabled="$bybitApi.openOrders.length === 0"
-             color="success"
-             class="mr-2"
-             @click="$bybitApi.cancelAllBuyOpenOrders()"
-      >
-        Cancel Buys
-      </v-btn>
-      
-      
-      <v-btn small
-             :disabled="$bybitApi.openOrders.length === 0"
-             color="error"
-             class="mr-2"
-             @click="$bybitApi.cancelAllSellOpenOrders()"
-      >
-        Cancel Sells
-      </v-btn>
-      
-      <v-btn small
-             :disabled="$bybitApi.openOrders.length === 0"
-             color="primary"
-             @click="$bybitApi.cancelAllOpenOrders()"
-      >
-        Cancel All
-      </v-btn>
-    </div>
-  </v-layout>
-  
+<v-col cols="12">
+ 
   <v-data-table
-      :headers="headers"
-      :items="$bybitApi.openOrders"
-      :items-per-page="10"
-  >
+  :headers="headers"
+  :items="sortedOpenOrders"
+  :items-per-page="50"
+>
+    <template v-slot:header="props">
+      <thead>   
+        <tr>
+          <th colspan="12">
+          <!-- Add a th element for each column in the table -->
+          <!-- <span class="font-weight-light">Total Orders {{ $bybitApi.openOrders.length }}
+            Long {{sumb($bybitApi.openOrders.filter(order => order.side === 'Buy')) }} 
+            Short {{sumb($bybitApi.openOrders.filter(order => order.side === 'Sell')) }}
+            Total Contracts {{sum($bybitApi.openOrders.filter(order => order.side === 'Buy'), 'qty') + sum($bybitApi.openOrders.filter(order => order.side === 'Sell'), 'qty')}} (Long {{sum($bybitApi.openOrders.filter(order => order.side === 'Buy'), 'qty')}} 
+            - Short {{sum($bybitApi.openOrders.filter(order => order.side === 'Sell'), 'qty')}})</span> -->
+            </th>
+        </tr>
+      </thead>
+    </template>
     <template v-slot:item.cancel="{ item }">
       <v-btn small
              color="primary"
@@ -45,6 +28,27 @@
         Cancel
       </v-btn>
     </template>
-  </v-data-table>
-</section>
+    
+    <template v-slot:item.updated_at="{ item }"> <!-- Add a template for the 'updated_at' column -->
+      {{ item.updated_at | formatDate }} <!-- Apply the format Date filter -->
+    </template>
 
+    <template v-slot:item.totalPL="{ item }">
+      ${{ item.totalPL.toFixed(2) }}
+    </template> 
+   
+    <template v-slot:item.PL="{ item }">
+      ${{ item.PL.toFixed(2) }}
+    </template>
+
+    <!-- <template v-slot:item.realised_pnl="{ item }">
+      <span v-if="item.realised_pnl < 0" class="error--text">{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span>
+      <span v-else-if="item.realised_pnl > 0" class="success--text">{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span>
+      <span v-else>{{item.realised_pnl.toFixed(6)}} | ≈${{(item.realised_pnl.toFixed(6) * $bybitApi.lastPrice).toFixed(2)}}</span>
+    </template>  -->
+    
+
+
+    
+  </v-data-table>
+</v-col>

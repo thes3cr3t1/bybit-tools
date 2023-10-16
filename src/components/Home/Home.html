@@ -1,85 +1,104 @@
-<v-content>
+<v-main>
   <v-container>
     <v-layout
         text-center
         wrap
         column
     >
+
       <open-position v-if="$bybitApi.openPosition && $ui.showOpenPosition"></open-position>
-      <v-row justify="space-between" cols="12">
-        <v-col v-if="$ui.showTvChart"
-               cols="12"
-               :xl="expandTv ? 12 : $ui.showRiskManagementPane ? 6 : 9"
-               lg="12"
-               md="12"
-               sm="12"
-               xs="12"
-        >
-          <webview :src="'https://www.tradingview.com/chart/' + $ui.chartsIds[$bybitApi.currentSymbol]"
-                   style="min-height: 65vh; height: 100%;"
-                   :style="expandTv ? tvStyleBig : tvStyleSmall">
-          </webview>
-          <v-btn x-small class="d-none d-xl-inline" @click="expandTv = !expandTv">Toggle Chart Size</v-btn>
-        </v-col>
-        <v-col
-            cols="12"
-            :xl="$ui.showTvChart && !expandTv ? 3 : $ui.showRiskManagementPane ? 6 : 12"
-            :lg="$ui.showRiskManagementPane ? 6 : 12"
-            :md="$ui.showRiskManagementPane ? 6 : 12"
-            sm="12"
-            xs="12"
-        >
-          <div class="row justify-center">
-            <v-btn-toggle
-                v-model="orderTypeId"
-                mandatory
-                class="mb-2"
-                color="primary"
-            >
-              <v-btn small>
-                Ladder
-              </v-btn>
-              <v-btn small>
-                Limit
-              </v-btn>
-              <v-btn small>
-                Market
-              </v-btn>
-            </v-btn-toggle>
-            <v-switch v-model="$ui.showRiskManagementPane" dense hide-details class="risk ma-2 mt-0" color="primary"
-                      label="Risk Pane"></v-switch>
-          </div>
-          
-          <ladder-orders-form v-show="orderTypeId === 0"
-                              @order="order = $event"
-                              :key="$bybitApi.currentSymbol + 0"
-                              :active="orderTypeId === 0"></ladder-orders-form>
-          <limit-order-form v-show="orderTypeId === 1"
-                            @order="order = $event"
-                            :key="$bybitApi.currentSymbol + 1"
-                            :active="orderTypeId === 1"></limit-order-form>
-          <market-order-form v-show="orderTypeId === 2"
-                             @order="order = $event"
-                             :key="$bybitApi.currentSymbol + 2"
-                             :active="orderTypeId === 2"></market-order-form>
-        </v-col>
-        <v-col v-show="$ui.showRiskManagementPane"
-               cols="12"
-               :xl="$ui.showTvChart && !expandTv ? 3 : 6"
-               lg="6"
-               md="6"
-               sm="12"
-               xs="12"
-        >
-          <risk-management-pane :order="order" :key="orderTypeId"></risk-management-pane>
-        </v-col>
-      </v-row>
-      <open-orders-list></open-orders-list>
-      <div class="caption mt-2">
-        BTC Tip line : 1NkgAB4JmbTp7NFkWPVnpZiWJkgoxUkpks /
-        ETH Tip line : 0x1d1fe0de85fe11fea34782cb2883b272fa10c57a
-      </div>
-      <notifications position="bottom left" :duration="4000"/>
-    </v-layout>
-  </v-container>
-</v-content>
+    
+    
+         
+            <div class="row justify-center ">
+              <v-btn-toggle v-model="orderTypeId" 
+              mandatory
+              class="mb-15 mt-10"
+              color="primary"> 
+<v-btn small>
+  Scalping
+</v-btn>
+<v-btn small>
+  Ladder
+</v-btn>
+<v-btn small>
+  Limit
+</v-btn>
+<v-btn small>
+  Market
+</v-btn>
+<v-btn small>
+  Screener
+</v-btn>
+<v-btn small>
+  Calcs
+</v-btn>
+<v-btn small>
+  Bots
+</v-btn>
+</v-btn-toggle>
+<v-switch v-model="$ui.showRiskManagementPane" dense hide-details class="risk ml-5 mt-10" color="primary"
+        label="Risk Pane"></v-switch>
+</div>
+
+<scalp-form v-show="orderTypeId === 0"
+                  @order="order = $event"
+                  :key="$bybitApi.currentSymbol + 0"
+                   :active="orderTypeId === 0"></scalp-form>
+<ladder-orders-form v-show="orderTypeId === 1"
+                    @order="order = $event"
+                    :key="$bybitApi.currentSymbol + 1"
+                    :active="orderTypeId === 1"></ladder-orders-form>
+<limit-order-form v-show="orderTypeId === 2"
+                  @order="order = $event"
+                  :key="$bybitApi.currentSymbol + 2"
+                  :active="orderTypeId === 2"></limit-order-form>
+<market-order-form v-show="orderTypeId === 3"
+                   @order="order = $event"
+                   :key="$bybitApi.currentSymbol +3"
+                   :active="orderTypeId === 3"></market-order-form>
+
+<screener v-show="orderTypeId === 4"
+                   @order="order = $event"
+                   :key="$bybitApi.currentSymbol + 4"
+                   :active="orderTypeId === 4"></screener>
+
+<calcs v-show="orderTypeId === 5"
+                   @order="order = $event"
+                   :key="$bybitApi.currentSymbol + 5"
+                   :active="orderTypeId === 5"></calcs>
+
+ <bots v-show="orderTypeId === 6"
+                   @order="order = $event"
+                   :key="$bybitApi.currentSymbol + 6"
+                   :active="orderTypeId === 6"></bots>
+</v-col>
+<v-col v-show="$ui.showRiskManagementPane"
+     cols="12"
+     :xl="$ui.showTvChart && !expandTv ? 3 : 6"
+     lg="6"
+     md="6"
+     sm="12"
+     xs="12"
+>
+<risk-management-pane :order="order" :key="orderTypeId"></risk-management-pane>
+</v-col>
+</v-row>
+
+<v-row no-gutters v-show="orderTypeId === 0"> <!-- Show only when Scalping form is displayed -->
+<v-col cols="3">
+  <support-resistance-list></support-resistance-list> 
+</v-col>
+<v-col cols="5">
+  <open-orders-list></open-orders-list>
+</v-col>
+<v-col cols="4">
+  <order-book-list></order-book-list> 
+</v-col>
+</v-row>
+
+<!--<ladder-history-list></ladder-history-list>-->
+<notifications position="bottom left" :duration="1500" :max="5"/>
+</v-layout>
+</v-container>
+</v-main>

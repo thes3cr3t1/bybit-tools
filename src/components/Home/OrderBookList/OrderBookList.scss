@@ -1,0 +1,118 @@
+.order-book-list {
+    text-align: center;
+}
+
+.ask{
+  font-family:cursive 16px;
+  color:rgb(224,64,64)
+  
+}
+
+.bid{
+  font-family:cursive 16px; 
+  color:rgb(38, 236, 130)
+}
+
+.highlight-row{
+  background-color:blue;
+}
+
+.highlighted {
+  background-color: yellow;
+}
+
+// v-data-table {
+//   /* Add overflow: auto to show scrollbar */
+//   overflow: auto;
+// }
+
+.v-data-table__header {
+  position: sticky;
+  top: 0;
+  background: white;
+}
+
+.v-data-table {
+  /* Add overflow: auto to show scrollbar */
+  overflow: auto;
+}
+
+.myClass{
+
+  overflow: visible; 
+}
+
+.v-btn:not(.v-btn--round).v-size--default{
+  color: white !important;
+  font-size: 14px !important;
+  height:15px !important;
+  padding:0px !important;
+  margin-left:0x !important;
+  min-width:10px !important;
+
+}
+
+.span-text{
+
+  //user-select: none;
+}
+
+.cancel_btn .v-btn {
+    color: white !important;
+    font-size: 14px !important;
+    min-width:10px !important;
+    height:10px !important;
+    padding:5px !important;
+    margin-left:5px !important;
+    size:5px !important;
+}
+
+.cancel_btn .v-icon {
+    color: white !important;
+    font-size: 14px !important;
+    min-width:10px !important;
+    height:10px !important;
+    padding:2px !important;
+    margin-left:0px !important;
+    size:5px !important;
+}
+  
+
+.cancel_btn{
+min-width:10px;
+height:10px;
+padding:5px;
+margin-left:5px;
+size:5px;
+}
+
+.bg-gradient {
+  background-image: linear-gradient(to right, rgba(80, 255, 59, 0.25), rgba(80, 255, 59, 0.15));
+  opacity: 0.5;
+}
+
+.highlighted {
+  background-color: rgba(72, 85, 207, 0.541);
+}
+
+.green-fade {
+  transition: background-color 0.5s ease-in-out;
+  background-color: rgba(80, 255, 59, 0.1);
+}
+.red-flash {
+  animation: flash-red 0.5s linear;
+  background-color: rgba(255, 59, 105, 0.1);
+}
+
+@keyframes flash-red {
+  0% {
+    background-color: rgba(255, 59, 105, 0.1);
+  }
+  50% {
+    background-color: rgba(255, 59, 105, 0);
+  }
+  100% {
+    background-color: rgba(255, 59, 105, 0.1);
+  }
+}
+

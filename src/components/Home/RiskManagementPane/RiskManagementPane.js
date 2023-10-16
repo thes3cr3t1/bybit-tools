@@ -117,7 +117,6 @@ export default {
     },
   },
   mounted() {
-    // console.log(this.order);
     if (localStorage.risk) {
       this.risk = localStorage.risk;
     }

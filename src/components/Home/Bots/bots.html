@@ -1,0 +1,103 @@
+<v-layout column align-center>
+  <template>
+    <v-layout column align-center>
+
+       <v-layout row wrap style="width: 1830px;">
+
+      <v-layout row wrap>
+        <v-col cols="10">
+          <v-container>
+            <v-row>
+                 <v-col v-for="bot in bots" :key="bot.id" cols="12" sm="6" md="4"> 
+                <v-card class="bot-card">
+                  <v-card-title class="bot-title">{{ bot.ticker }}</v-card-title>
+                  <v-card-text>
+                    <div class="bot-row">
+                      <div class="bot-status">Status: {{ bot.positionStatus }}</div>
+                    </div>
+                    <v-card-text>
+                      <div class="bot-info">Start Price: {{ bot.startPrice }}</div>
+                      <div class="bot-info">Side: {{ bot.side }}</div>
+                      <div class="bot-info">Price steps: {{ bot.priceSteps }}</div>
+                      <div class="bot-info">TP Target: {{ bot.tpTarget }}</div>
+                      <div class="bot-info">Leverage: {{ bot.leverage }}</div>
+                      <div class="bot-info">Initial order margin: {{ bot.initialOrderMargin }}</div>
+                      <div class="bot-info">Safety order margin: {{ bot.safetyOrderMargin }}</div>
+                      <div class="bot-info">Max safety orders: {{ bot.maxSafetyOrders }}</div>
+                      <div class="bot-info">Price offset: {{ bot.priceOffset }}</div>
+                      <div class="bot-info">price steps multiplier: {{ bot.priceStepsMultiplier }}</div>
+                      <div class="bot-info">Amount Multiplier: {{ bot.amountMultiplier }}</div>
+                    
+                      <div class="bot-info">SL Target: {{ bot.slTarget }}</div>
+                      <div class="bot-info">Invested margin: {{ bot.investedMargin }}</div>
+                      <div class="bot-info">Orders Placed: {{ bot.ordersPlaced }}</div>
+                      <div class="bot-info">Position Opened: {{ bot.positionOpened }}</div>
+                      <div class="bot-info">Cycle: {{ bot.currentCycleIndex }}</div> 
+                 
+                      <div class="bot-info"
+                      :style="{ color: bot.position.unrealisedPnl < 0 ? 'red' : 'green', fontSize: '18px', fontWeight: 'bold' }">
+                   P&L: {{ bot.position.unrealisedPnl !== undefined ? bot.position.unrealisedPnl : '0' }}
+                 </div>
+
+                    </v-card-text>
+                  </v-card-text>
+                  <v-card-actions>
+                    <!-- <v-btn v-if="bot.status === 'inactive'" color="success" @click="startBot(bot)"> Start </v-btn> -->
+                    <!-- //<v-btn v-else color="error" @click="stopBot(bot)"> Stop </v-btn> -->
+                    <v-btn color="error" @click="stopBot(bot)"> Stop </v-btn>
+                    <v-btn color="warning" @click="deleteBot(bot)"> Delete </v-btn>
+                    <v-btn color="success" @click="startBot(bot)"> Start </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-col>
+        <v-col cols="2">
+          <v-container>
+            <v-card>
+              <!-- <v-card-title class="bot-title">{{ previewedBot.ticker }}</v-card-title> -->
+              <v-card-title class="bot-title">{{ newBot.ticker }}</v-card-title>
+              <v-card-text>
+                <div class="bot-info">Side: {{ previewedBot.side }}</div>
+                <div class="bot-info">Price steps: {{ previewedBot.priceSteps }}</div>
+                <div class="bot-info">TP Target: {{ previewedBot.tpTarget }}</div>
+                <div class="bot-info">Leverage: {{ previewedBot.leverage }}</div>
+                <div class="bot-info">Initial order margin: {{ previewedBot.initialOrderMargin }}</div>
+                <div class="bot-info">Safety order margin: {{ previewedBot.safetyOrderMargin }}</div>
+                <div class="bot-info">Max safety orders: {{ previewedBot.maxSafetyOrders }}</div>
+                <div class="bot-info">Price offset: {{ previewedBot.priceOffset }}</div>
+                <div class="bot-info">price steps multiplier: {{ previewedBot.priceStepsMultiplier }}</div>
+                <div class="bot-info">Amount Multiplier: {{ previewedBot.amountMultiplier }}</div>
+              
+                <div class="bot-info">SL Target: {{ previewedBot.slTarget }}</div>
+                <div class="bot-info">Invested margin: {{ previewedBot.investedMargin }}</div>
+              </v-card-text>
+            </v-card>
+
+            <v-form @submit.prevent="addNewBot" class="form-container">
+              <v-text-field v-model="newBot.ticker" label="Ticker" outlined dense />
+              <v-select v-model="newBot.side" :items="['Long', 'Short']" label="Side" value="Long" outlined dense />
+              <v-text-field v-model.number="newBot.priceSteps" label="Price Steps" outlined dense />
+              <v-text-field v-model.number="newBot.tpTarget" label="TP target per cycle" outlined dense />
+              <v-text-field v-model.number="newBot.leverage" label="Leverage" outlined dense />
+              <v-text-field v-model.number="newBot.initialOrderMargin" label="Initial order margin" outlined dense />
+              <v-text-field v-model.number="newBot.safetyOrderMargin" label="Safety order margin" outlined dense />
+              <v-text-field v-model.number="newBot.maxSafetyOrders" label="Max safety Orders" outlined dense />
+              <v-text-field v-model.number="newBot.priceOffset" label="Price Offset" outlined dense />
+              <v-text-field v-model.number="newBot.priceStepsMultiplier" label="Price steps multiplier" outlined dense />
+              <v-text-field v-model.number="newBot.amountMultiplier" label="Amount multiplier" outlined dense />
+              <v-text-field v-model.number="newBot.slTarget" label="SL target" outlined dense />
+              <v-btn type="submit" color="primary">Add Bot</v-btn>
+            </v-form>
+
+
+          </v-container>
+        </v-col>
+      </v-layout> 
+      </v-layout>
+    </v-layout>
+  </template>
+  
+ </v-layout>
+ 

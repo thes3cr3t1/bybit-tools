@@ -1,0 +1,61 @@
+
+<div>
+  <v-container>
+    <v-row>
+      
+      <v-col cols="12" sm="6">
+        <v-form ref="tradeSummaryForm" v-model="valid">
+          <h3>Trade Summary</h3>
+          <v-row>
+            <v-col cols="12">
+              <v-text-field v-model="wins" label="Wins" type="number" required></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field v-model="losses" label="Losses" type="number" required></v-text-field>
+            </v-col>
+          </v-row>
+          <v-data-table :headers="headers" :items="[tableData]"></v-data-table>
+        </v-form>
+      </v-col>
+
+      
+      <v-col cols="12" sm="6">
+        <v-form ref="tradeProjectionsForm" v-model="valid">
+          <h3>Target Projections</h3>
+
+          <v-row>
+            <v-col cols="12">
+              <v-text-field v-model="startingBalance" label="Starting $" type="number" required></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field v-model="targetPercentage" label="Target %" type="number" required></v-text-field>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field v-model="riskPercentage" label="Risk %" type="number" required></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <v-data-table :headers="projectionHeaders" :items="projectionData">
+                <template v-slot:item="props">
+                  <tr :class="{ 'green': calculateExceeded(props.item) }">
+                    <td>{{ props.item.tradeNo }}</td>
+                    <td>{{ props.item.startingBalance }}</td>
+                    <td>{{ props.item.targetPercentage }}</td>
+                    <td>{{ props.item.riskAmount }}</td>
+                    <td>${{ props.item.profitRequired }}</td> <!-- New column -->
+                    <td>${{ props.item.balanceIncrease }}</td>
+                    <td>
+                      <v-icon v-if="calculateExceeded(props.item)">mdi-check</v-icon>
+                    </td>
+            
+                  </tr>
+                </template>
+              </v-data-table>
+            </v-col>
+          </v-row>
+        </v-form>
+      </v-col>
+    </v-row>
+  </v-container>
+</div>

@@ -28,6 +28,7 @@ function createWindow() {
       nodeIntegration: true,
       webviewTag: true,
       webSecurity: false,
+      contextIsolation: false,
     },
     icon: path.join(__static, 'icon.png')
   });

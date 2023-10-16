@@ -1,4 +1,4 @@
-import PreviewOrders from './PreviewOrders';
+import PreviewOrders from '../PreviewOrders';
 import {ORDER_DISTRIBUTIONS} from './constants';
 import {generateOrders} from './scaledOrderGenerator';
 

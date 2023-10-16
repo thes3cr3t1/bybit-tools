@@ -39,18 +39,54 @@ const getAmountDistribution = (distribution, orderCount, coefficient) => {
 };
 
 // Distribute an amount based on weighting
-const distributeAmount = (total, weights) => {
+
+// const distributeAmount = (total, weights) => {
+//   let leftover = 0;
+//   const distributedTotal = [];
+//   const distributionSum = _.sum(weights);
+  
+//   weights.forEach(weight => {
+//     const val = (weight * total) / distributionSum + leftover;
+    
+//     const weightedValue = Math.trunc(val);
+//     leftover = val % 1;
+    
+//     distributedTotal.push(weightedValue);
+//   });
+  
+//   // Add any leftover to the largest weight
+//   if (_.isNumber(leftover)) {
+//     const indexOfLargestWeight = _.indexOf(
+//         distributedTotal,
+//         _.max(distributedTotal),
+//     );
+    
+//     distributedTotal[indexOfLargestWeight] = _.round(
+//         distributedTotal[indexOfLargestWeight] + leftover,
+//         0,
+//     );
+//   }
+  
+//   return distributedTotal;
+// };
+
+const distributeAmount = (total, weights, minTolerance) => {
   let leftover = 0;
   const distributedTotal = [];
   const distributionSum = _.sum(weights);
   
   weights.forEach(weight => {
     const val = (weight * total) / distributionSum + leftover;
-    
-    const weightedValue = Math.trunc(val);
+    let weightedValue = Math.trunc(val);
     leftover = val % 1;
     
-    distributedTotal.push(weightedValue);
+    // check if the value is less than the minimum tolerance
+    if (weightedValue < minTolerance) {
+      // set the value to the minimum tolerance
+      weightedValue = minTolerance;
+    } 
+    //rounding the value to nearest multiple of 100
+    distributedTotal.push(Math.round(weightedValue/minTolerance)*minTolerance);
   });
   
   // Add any leftover to the largest weight
@@ -69,6 +105,37 @@ const distributeAmount = (total, weights) => {
   return distributedTotal;
 };
 
+
+const generateOrdersByPricePoints = (amount, prices, distribution, coefficient, tickSize) => {
+
+  prices.sort();
+  const orderCount = prices.length;
+  const weights = getAmountDistribution(distribution, orderCount, coefficient);
+  const orderSizes = distributeAmount(amount, weights);
+
+  
+  const orderPrices = prices.map(price => roundToTickSize(tickSize, price));
+
+  let minPrice = Infinity;
+  let maxPrice = -Infinity;
+  
+  const orders = orderPrices.reduce((acc, price, index) => {
+    if (price < minPrice) minPrice = price;
+    if (price > maxPrice) maxPrice = price;
+    
+    return acc.concat([
+      {
+        price,
+        amount: orderSizes[index],
+      },
+    ]);
+  }, []);
+  
+  return orders
+  
+};
+
+
 const generateOrders = ({
                           amount,
                           orderCount,
@@ -76,8 +143,21 @@ const generateOrders = ({
                           priceUpper,
                           distribution,
                           tickSize,
-                          coefficient
+                          coefficient,
+                          minTolerance
                         }) => {
+
+  var data = { 
+    amount,
+    orderCount,
+    priceLower,
+    priceUpper,
+    distribution,
+    tickSize,
+    coefficient,
+    minTolerance
+  };
+
   if (amount < 2) {
     return new Error('Amount must be greater than or equal to 2');
   }
@@ -87,10 +167,18 @@ const generateOrders = ({
   }
   
   const weights = getAmountDistribution(distribution, orderCount, coefficient);
-  const orderSizes = distributeAmount(amount, weights);
+  // console.log(amount);
+  // console.log(weights);
+  // console.log(minTolerance);
+  const orderSizes = distributeAmount(amount, weights, minTolerance);
+
+  //console.log(orderSizes);
   
   const priceDiff = priceUpper - priceLower;
   const stepsPerPricePoint = priceDiff / (orderCount - 1);
+
+  //
+  //console.log("priceDiff " + priceDiff + " stepsPerPricePoint " + stepsPerPricePoint);
   
   // Generate the prices we're placing orders at
   const orderPrices = _.range(orderCount).map(i => {
@@ -106,6 +194,7 @@ const generateOrders = ({
     
     return priceLower + stepsPerPricePoint * i;
   }).map(price => roundToTickSize(tickSize, price));
+  
   
   let minPrice = Infinity;
   let maxPrice = -Infinity;
@@ -123,19 +212,22 @@ const generateOrders = ({
   // Verify that the generated orders match the specification so that we don't end up poor
   
   if (Math.abs(_.sumBy(orders, order => order.amount)) > Math.abs(amount)) {
-    return new Error(`The orders total up to an amount larger than ${amount}`);
+    let size = Math.abs(_.sumBy(orders, order => order.amount));
+    console.log(`The orders total up to an amount larger than ${amount} the amount was ${size} `);
+  //  return new Error(`The orders total up to an amount larger than ${amount}` + " the amount was " + Math.abs(_.sumBy(orders, order => order.amount)));
   }
   
   if (minPrice < priceLower) {
-    return new Error('Order is lower than the specified lower price');
+    return new Error('Order is lower than the specified lower price ' + minPrice + " " + priceLower);
   }
 
   if (maxPrice > priceUpper) {
-    return new Error('Order is higher than the specified upper price');
+    return new Error('Order is higher than the specified upper price ' + maxPrice + " " + priceUpper);
   }
   
   return orders;
 };
+
 
 const roundToTickSize = (tickSize, price) => {
   const tp = new Decimal(tickSize);
@@ -149,4 +241,4 @@ const roundToTickSize = (tickSize, price) => {
   return roundedDecimal.toDecimalPlaces(tp.dp()).toNumber();
 };
 
-export {generateOrders};
+export {generateOrders, generateOrdersByPricePoints};

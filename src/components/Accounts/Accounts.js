@@ -34,9 +34,9 @@ export default {
   methods: {
     add: function() {
       this.$bybitApi.accounts.push({
-        label: '',
-        apiKey: '',
-        apiSecret: '',
+        label: 'test',
+        apiKey: 'KEY',
+        apiSecret: 'lSJUKmc8GySECRETpj2O5Za4ZgiJZWR',
         isTestnet: false
       }) ;
     },

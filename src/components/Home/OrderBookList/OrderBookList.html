@@ -1,0 +1,86 @@
+<v-data-table :headers="orderBookHeaders" 
+              :items="$bybitApi.OrderBookParsed" 
+              :items-per-page="500" 
+              sortable: false height="800" 
+              style="max-height:10000px;"
+              :hide-default-footer="true"
+              disable-pagination
+              fixed-header>
+
+
+            <template v-slot:header="props">
+              <thead>
+                <th>
+                  <v-select v-model="pricePrecision" :items="precisionOptions" label="Price Precision"></v-select>
+                </th>
+       
+                <tr>
+                  <th>
+                 
+                    <v-form>
+                      <v-text-field v-model="formFieldQty" label="Qty" type="number">1</v-text-field>
+                    </v-form>
+                    </th><th>
+                        <v-btn block tile color="success" style="width:60px;" @click="fillForm(50)">
+                          <span class="text-truncate" style="width:40px;">50</span>
+                        </v-btn>
+                      </th><th>
+                        <v-btn block tile color="success" style="width:60px;" @click="fillForm(100)">
+                          <span class="text-truncate" style="width:40px;">100</span>
+                        </v-btn>
+                      </th><th>
+                        <v-btn block tile color="success" style="width:60px;"@click="fillForm(1000)">
+                          <span class="text-truncate" style="width:40px;">1000</span>
+                        </v-btn>
+                      </th><th>
+                        <v-btn block tile color="success" style="width:90px;"@click="fillForm(0)">
+                          <span class="text-truncate" style="width:70px;">reset</span>
+                        </v-btn>
+                     </th>
+                </tr>
+              </thead>
+            </template>
+            <template v-slot:item="props"> 
+              <tr>
+                <td :style="{'background-image': 'linear-gradient(to right, rgba(80, 255, 59, 0.25), rgba(80, 255, 59, 0.15)'+ maxBidSizeCalc(props.item.bid_size)+'%, rgba(0, 0, 0, 0) 5%)'}">
+                  <span>{{props.item.bid_total.toLocaleString('en-US')}}</span>
+                </td>
+                <td :id="'bid-size-' + props.index">
+                  {{ bidSize(props.item.bid_size, props.index) }}
+                </td>
+                <td :style="{'background-image': 'linear-gradient(to left, rgba(80, 255, 59,  0.2), rgba(80, 255, 59, 0.1)'+ maxBidTotalCalc(props.item.bid_total)+'%, rgba(0, 0, 0, 0) 2%)'}"
+                    v-bind:class="{ 'highlighted': highlightedPricesData.find(hp => hp.price == props.item.bid_price) }">
+                  <span class="span-text" @dblclick="placeOrder(props.item.bid_price,'Buy', formFieldQty)">{{props.item.bid_price.toLocaleString('en-US')}}</span>
+                  <template v-if="highlightedPricesData.find(hp => hp.price == props.item.bid_price)">
+                    <v-btn class="cancel_btn" @click="cancelOrder(props.item.bid_price)" color="primary">
+                      <v-icon class="cancel_btn">mdi-close</v-icon>
+                    </v-btn>
+                  </template>
+                  
+                </td>
+
+                <td :style="{'background-image': 'linear-gradient(to right, rgba(255, 59, 105, 0.2), rgba(255, 59, 105, 0.1)'+ maxAskTotalCalc(props.item.ask_total)+'%, rgba(0, 0, 0, 0) 2%)'}"
+                v-bind:class="{ 'highlighted': highlightedPricesData.find(hp => hp.price == props.item.ask_price) }">
+                    <span class="span-text" @dblclick="placeOrder(props.item.ask_price,'Sell', formFieldQty)">{{props.item.ask_price.toLocaleString('en-US')}}</span>
+                     <template v-if="highlightedPricesData.find(hp => hp.price == props.item.ask_price)">
+                      <v-btn class="cancel_btn" @click="cancelOrder(props.item.ask_price)" color="primary">
+                        <v-icon class="cancel_btn">mdi-close</v-icon>
+                      </v-btn>
+                    </template>
+                </td>
+
+                <td :id="'ask-size-' + props.index" >
+                  {{ askSize(props.item.ask_size, props.index) }}
+                </td>
+                <td :style="{'background-image': 'linear-gradient(to left, rgba(255, 59, 105, 0.25), rgba(255, 59, 105, 0.15)'+ maxAskSizeCalc(props.item.ask_size) +'%, rgba(0, 0, 0, 0) 5%)'}">
+                  <span>{{props.item.ask_total.toLocaleString('en-US')}}</span>
+                </td> 
+              </tr>
+            </template> 
+
+
+         
+          </v-data-table>
+
+
+

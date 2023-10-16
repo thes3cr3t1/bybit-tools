@@ -1,3 +1,79 @@
-.header-comp {
+.countdown-timer {
+    font-size: 14px;
+  }
 
+
+::-webkit-scrollbar {
+    width: 6px;
+    background-color: #1e213d;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    
+    height:20px;
+    border-radius: 10px;
+    background-color: #484848;
+  }
+  .my-table {
+    height: 100%;
+  }
+
+  .search-bar{
+    padding: 3px;
+    padding-top: 5px;;
+    border-top-left-radius: 15px;
+    background-color: #1e213d;
+    width:100%
+  }
+
+.positive {
+    color: green;
+}
+
+.negative {
+    color: red;
+}
+
+.oc__strategy-trade-switch-icon {
+ 
+
+  color: rgb(99, 109, 4);;
+  font-weight: 500;
+  font-size: var(--font-size-12);
+  transform: scale(.66);
+}
+
+.image-class {
+  display: inline-block;
+}
+
+.span-class {
+  display: inline-block;
+}
+
+.rotate-text{
+
+
+
+    transform: rotate(-45deg);
+  
+  
+    /* Legacy vendor prefixes that you probably don't need... */
+  
+    /* Safari */
+    -webkit-transform: rotate(-45deg);
+  
+    /* Firefox */
+    -moz-transform: rotate(-45deg);
+  
+    /* IE */
+    -ms-transform: rotate(-45deg);
+  
+    /* Opera */
+    -o-transform: rotate(-45deg);
+  
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+  
+  
 }

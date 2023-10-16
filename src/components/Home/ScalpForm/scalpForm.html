@@ -1,0 +1,286 @@
+<v-layout column align-center>
+
+      <v-form v-model="valid">
+
+        <v-row dense>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-text-field v-model="form.maintainRisk" :rules="formValidation.maintainRisk" label="Dollar Risk" type="number" step="1"
+            required >
+          </v-text-field>
+  
+          </v-col>
+          
+          <v-col cols="11" xs="1" sm="1" md="1">
+              <v-switch v-model="toggleMaintainRisk" dense hide-details color="primary" tabindex="11"
+              label="Maintain Risk"></v-switch>
+          </v-col>
+  
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-text-field v-model="form.maintainProfit" :rules="formValidation.maintainProfit" label="Dollar Profit Lock" type="number" step="1"
+            required >
+          </v-text-field>
+
+          </v-col>
+  
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-switch v-model="toggleMaintainProfit" dense hide-details color="primary" tabindex="11"
+            label="Maintain Profit"></v-switch>
+         </v-col>
+  
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-text-field v-model="form.trigger" :rules="formValidation.trigger" label="Breakeven Trigger Price" type="number" step="1"
+            required >
+          </v-text-field>
+
+          </v-col>
+  
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-switch v-model="toggleAutobreakeven" dense hide-details color="primary" tabindex="11"
+            label="Auto breakeven"></v-switch>
+
+          </v-col>
+  
+  
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-switch v-model="toggleActivateBot" dense hide-details color="primary" tabindex="11"
+            label="Activate Bot"></v-switch>
+         </v-col>
+      </v-row>
+
+      <!--Begin ladder in ROW-->
+      <v-row dense>
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+        <v-col cols="11" xs="1" sm="1" md="1">
+          <!-- <v-text-field v-model="form.trigger" :rules="formValidation.trigger" label="Trigger Price" type="number" step="1"
+          required >
+        </v-text-field> -->
+
+        </v-col>
+        
+        <v-col cols="11" xs="1" sm="1" md="1">
+            <!-- <v-switch v-model="toggleAutobreakeven" dense hide-details color="primary" tabindex="11"
+            label="Auto breakeven"></v-switch> -->
+        </v-col>
+
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+
+
+        <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+    </v-row>
+
+      <v-row dense>
+      <v-col cols="12" xs="1" sm="1" md="1" class="d-flex justify-center align-center" style="font-size: 13px;">
+         <!-- High Price {{this.highPrice}} <br> Low Price: {{this.lowPrice}}  -->
+       
+         <!-- <v-select class="ma-0"
+         height="25"
+         v-model="form.scale"
+         :items="form.scaleItems"
+         :rules="[v => !!v || 'Scale is required']"
+         label="Scale"
+         required
+></v-select> -->
+
+      </v-col>
+      <v-col cols="12" xs="1" sm="1" md="1">
+      <v-text-field v-model="form.priceOffsetIn" :rules="formValidation.priceOffsetIn" label="Price offset" type="number" step="0.1" @focus="Identify('ladderInForm')" tabindex="1"
+                   required >
+      </v-text-field>
+      </v-col>
+      <v-col cols="12" xs="1" sm="1" md="1">
+      <v-text-field v-model="form.orderCountIn" :rules="formValidation.orderCount" label="Order Count" type="number" @focus="Identify('ladderInForm')" tabindex="2"
+                   oninput="if(Number(this.value) > Number(this.max)) this.value = this.max; if(Number(this.value) <= Number(this.min)) this.value = this.min;" max="30" min="5"
+                   required>
+      </v-text-field>
+      </v-col>
+      <v-col cols="12" xs="1" sm="1" md="1">
+      <v-text-field v-model="form.rangeIn" :rules="formValidation.range" label="Range" type="number" step="5" @focus="Identify('ladderInForm')" tabindex="3"
+     
+      required>
+</v-text-field>
+      </v-col>
+
+        <v-col cols="12" xs="1" sm="1" md="1">
+        <v-text-field v-model="form.riskPercent" label="Risk %" type="number" step="0.25" required @focus="Identify('ladderInForm')"
+                      oninput="if(Number(this.value) > Number(this.max)) this.value = this.max; if(Number(this.value) <= Number(this.min)) this.value = this.min;" max="95" min="0.25" tabindex="4"
+
+        ></v-text-field>
+        </v-col>
+
+        <v-col cols="12" xs="1" sm="1" md="1"> 
+          <v-text-field v-model="form.stopLoss" label="Stop Loss" type="number" required @focus="Identify('ladderInForm')" tabindex="5"></v-text-field>
+
+          </v-col>
+
+          <v-col cols="12" xs="1" sm="1" md="1"> 
+            <v-text-field v-model="form.takeProfit" label="Take Profit" type="number" required @focus="Identify('ladderInForm')" tabindex="5"></v-text-field>
+  
+            </v-col>
+
+          
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2" @click="ladderIn">
+          <span v-if="form.priceOffsetIn >= 0" class="text-truncate" style="width:80px;">Ladder In <br> Short</span>
+          <span v-if="form.priceOffsetIn < 0" class="text-truncate" style="width:80px;">Ladder In <br> Long</span>
+        </v-btn>
+        
+        <v-btn :disabled="isDisabled" tile color="success" style="width:90px;" class="mr-2"  @click="calculateBreakevenPrice(true)"> 
+          <span class="text-truncate" style="width:80px;">Stop To <br> Break Even</span>
+        </v-btn>
+
+
+        <v-btn ref="ClosePositionBtn" :disabled="isDisabledB" tile color="success" style="width:90px;" class="mr-2" @click="closePosition(form.CloseAmount, 'Chase')">
+          <span class="text-truncate" style="width:80px;">Chase Limit<br>Close <br>{{form.CloseAmount}}</span>
+        </v-btn>
+
+       <v-btn tile color="success" style="width:90px;" class="mr-2" @click="closePosition(form.CloseAmount, 'Market')">
+          <span class="text-truncate" style="width:80px;">Market Close <br>{{form.CloseAmount}}</span>
+        </v-btn>
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2"  @click="closePosition(form.CloseAmount, 'Limit')">
+          <span class="text-truncate" style="width:80px;">Limit Close <br>{{form.CloseAmount}}</span>
+        </v-btn>
+
+        <v-col cols="12" xs="1" sm="1" md="1" tabindex="6">
+          <v-select class="ma-0"
+          height="25"
+          v-model="form.CloseAmount"
+          :items="form.CloseAmountItems"
+          item-text="text"
+          item-value="value"
+          label="Close Amount"
+          required></v-select>
+          </v-col>
+
+      </v-col>
+      </v-row>
+
+      <v-row dense>
+        <v-col cols="11" xs="1" sm="1" md="1">
+        </v-col>
+        <v-col cols="11" xs="1" sm="1" md="1">
+
+          <v-select class="ma-0"
+          height="25"
+          v-model="form.scale"
+          :items="form.scaleItems"
+          :rules="[v => !!v || 'Scale is required']"
+          label="Scale"
+          required
+ ></v-select>
+
+          </v-col>
+        <v-col cols="11" xs="1" sm="1" md="1">
+        <v-text-field v-model="form.priceOffsetOut" :rules="formValidation.priceOffsetOut" label="Price offset" type="number" step="5" @focus="Identify('ladderOutForm')" tabindex="7"
+                
+                     required >
+        </v-text-field>
+   
+        </v-col>
+        <v-col cols="11" xs="1" sm="1" md="1">
+        <v-text-field v-model="form.orderCountOut" :rules="formValidation.orderCountOut" label="Order Count" type="number" @focus="Identify('ladderOutForm')" tabindex="8"
+                     oninput="if(Number(this.value) > Number(this.max)) this.value = this.max; if(Number(this.value) <= Number(this.min)) this.value = this.min;" max="30" min="5"
+                     required>
+        </v-text-field>
+        </v-col>
+        <v-col cols="11" xs="1" sm="1" md="1">
+     
+        <v-text-field v-model="form.rangeOut" :rules="formValidation.range" label="Range" type="number" step="5" @focus="Identify('ladderOutForm')" tabindex="9"
+                    
+                     required>
+        </v-text-field>
+
+        </v-col>
+        <v-col cols="11" xs="1" sm="1" md="1">
+        <v-text-field label="Quantity" type="number" v-model="qty" required @click="qtyClicked()" tabindex="10">  </v-text-field>
+        </v-col>
+      
+        <v-col cols="11" xs="1" sm="1" md="1">
+          <v-switch v-model="TrackSizeSwitchStatus" dense hide-details color="primary" @change="TrackLiveQtySetter()" tabindex="11"
+          label="Track Size"></v-switch>
+        </v-col>
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2"  @click="BtnLadderOut">
+          <span class="text-truncate" style="width:80px;">Ladder Out</span>
+        </v-btn>
+
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2" @click="$bybitApi.cancelAllBuyOpenOrders()">
+          <span class="text-truncate" style="width:80px;">Cancel Buys</span>
+        </v-btn>
+
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2" @click="$bybitApi.cancelAllSellOpenOrders()">
+          <span class="text-truncate" style="width:80px;">Cancel Sells</span>
+        </v-btn>
+
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2" @click="$bybitApi.cancelAllOpenOrders()">
+          <span class="text-truncate" style="width:80px;">Cancel All</span>
+        </v-btn>
+
+
+        <v-btn tile color="success" style="width:90px;" class="mr-2" @click="$bybitApi.marketClosePositionQuater()">
+          <span class="text-truncate" style="width:80px;">Market Close <br> 1/4</span>
+        </v-btn>
+        </v-col>
+        </v-row>
+
+        <v-row dense>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1"></v-col>
+          <v-col cols="11" xs="1" sm="1" md="1">
+            <v-text-field label="Quantity" type="number" v-model="form.chaseInQty" required> </v-text-field>
+          </v-col>
+
+          <v-btn tile color="success" style="width:90px;" class="mr-2" @click="chaseIn(form.chaseInQty, 'Buy')">
+            <span class="text-truncate" style="width:80px;">Chase in <br>Long</span>
+          </v-btn>
+
+
+          <v-btn tile color="success" style="width:90px;" class="mr-2" @click="chaseIn(form.chaseInQty, 'Sell')">
+            <span class="text-truncate" style="width:80px;">Chase in  <br> Short</span>
+          </v-btn>
+
+
+
+          <v-btn tile color="success" style="width:90px;" class="mr-2" @click="ChaseLadderIn(form.chaseInQty, 'Sell')">
+            <span class="text-truncate" style="width:80px;">Chase Ladder In <br> 1 ATR</span>
+          </v-btn>
+
+
+          <v-btn tile color="success" style="width:90px;" class="mr-2" @click="ChaseLadderIn(form.chaseInQty, 'Sell')">
+            <span class="text-truncate" style="width:80px;">Chase Ladder In <br> 2 ATR</span>
+          </v-btn>
+
+
+          <v-btn tile color="success" style="width:90px;" class="mr-2" @click="testFunc()">
+            <span class="text-truncate" style="width:80px;">Ladder In</span>
+          </v-btn>
+      </v-row>
+
+     </v-form>
+     <v-row dense>
+       <preview-orders v-if="preview.length > 0" :orders="preview" @close="preview = []"></preview-orders>
+    </v-row>
+
+</v-layout>
+
+

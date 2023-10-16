@@ -1,0 +1,17 @@
+
+  <v-col cols="12">
+    <v-data-table
+      :headers="headers"
+      :items="items"
+      :items-per-page="10"
+      :hide-default-footer="true"
+      disable-pagination
+      v-if="Object.keys(this.$bybitApi.supportResistance).length > 0"
+    >
+      <template v-slot:header="props">
+       
+      </template>
+    </v-data-table>
+  </v-col>
+
+  
