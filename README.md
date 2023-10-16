@@ -6,7 +6,11 @@ Features,
 
 Martingale Bots which automatically restart after scanning the markets for oppertunities,
 
-Calulations page,
+Open Position Monitor with dynamic risk reward parameters, loss if stopped, gain if TP hits, liquidation price alert if stop loss is not set or is set beyond the liquidation price.
+
+Open Orders monitor with gains loss if orders are filled, auto updates as orders are filled.
+
+Calulations page for setting targets and visualisation,
 
 Market Screener,
 
@@ -14,13 +18,13 @@ Hot Keys and button layouts based on external keyboard for quick interaction wit
 
 OrderBook,
 
-Scale In,
+Scale In with risk managment calulations based on acct balance,
 
 Scale Out
 
 Chase In,
 
-Chase Out,
+Chase Out (reduce position),
 
 
 ![Screenshot 2023-10-16 210057](https://github.com/thes3cr3t1/bybit-tools/assets/49348412/0506e76a-cc80-4fc7-82d4-b60436651024)
